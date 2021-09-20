@@ -10,7 +10,10 @@ const newBreeds = (breed) => {
 
 const newCat = (cat)=>{
     cats.push(cat);
+    let result = JSON.stringify(breeds,'',2);
+    fs.writeFileSync('./data/cats.json', result);
 }
+
 
 const dataStorage = {
     newBreeds,

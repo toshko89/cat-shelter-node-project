@@ -16,14 +16,13 @@ http.createServer((req, res) => {
         let form = new formidable.IncomingForm();
 
         form.parse(req, (err, fields, files) => {
-            dataStorage.newBreeds(fields)
+            dataStorage.newBreeds(fields);
         });
 
     } else if (pathName === '/cats/add-cat' && method === 'POST') {
         let form = new formidable.IncomingForm();
-
         form.parse(req, (err, fields, files) => {
-            dataStorage.newCat(fields);
+            dataStorage.newCat(fields);   
         });
 
     }
