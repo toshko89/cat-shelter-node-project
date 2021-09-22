@@ -5,14 +5,13 @@ const cats = require('./../data/cats.json');
 
 const router = {
     '/': () => {
-        const html = fs.readFileSync('./views/home/index.html', 'utf8');
+        const html = fs.readFileSync('./views/home/index.html');
         const browserHead = { 'Content-Type': 'text/html' };
 
         return {
             html,
             browserHead
         }
-
     },
 
     '/content/styles/site.css': () => {

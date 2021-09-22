@@ -18,16 +18,24 @@ http.createServer((req, res) => {
         form.parse(req, (err, fields, files) => {
             dataStorage.newBreeds(fields);
         });
-        res.setHeader('location','/');
-        
+
+        res.writeHead(302, {
+            'Location': '/'
+        });
+        return res.end();
+
     } else if (pathName === '/cats/add-cat' && method === 'POST') {
         let form = new formidable.IncomingForm();
         form.parse(req, (err, fields, files) => {
 
-            dataStorage.newCat(fields,files);   
+            dataStorage.newCat(fields, files);
         });
-        res.setHeader('location','/');
-        
+
+        res.writeHead(302, {
+            'Location': '/'
+        });
+        return res.end();
+
     }
 
     const pageData = router[pathName]();
