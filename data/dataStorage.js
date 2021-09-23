@@ -4,6 +4,11 @@ const fs = require('fs');
 const id = require('uniqid');
 
 
+const changeCat = (cat,catId)=>{
+    let currentCat = cats.find(cat=>cat.id === catId);
+    console.log(currentCat);
+    console.log(`Novo info ${cat}`);
+}
 
 const newBreeds = (breed) => {
     breeds.push(breed);
@@ -27,7 +32,7 @@ const newCat = (cat, files) => {
         readStream.pipe(writeStream);
 
         readStream.on('end', () => {
-            fs.unlink(filePath, err => {sconsole.log(err)})
+            fs.unlink(filePath, err => {console.log(err)})
         })
 
         let newCat = {
@@ -51,7 +56,8 @@ const newCat = (cat, files) => {
 
 const dataStorage = {
     newBreeds,
-    newCat
+    newCat,
+    changeCat
 }
 
 module.exports = dataStorage;
