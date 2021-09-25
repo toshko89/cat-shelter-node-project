@@ -27,7 +27,7 @@ module.exports = (req, res) => {
     } else if (pathName === '/cats/add-cat' && req.method === 'POST') {
         let form = new formidable.IncomingForm();
         form.parse(req, (err, fields, files) => {
-            dataStorage.newCat(res,fields, files);
+            dataStorage.newCat(res, fields, files);
         });
 
     } else if (pathName === '/cats/add-breed' && req.method === 'GET') {
@@ -95,16 +95,54 @@ module.exports = (req, res) => {
         let [start, middle, catId] = pathName.split('/');
         let form = new formidable.IncomingForm();
         form.parse(req, (err, fields, files) => {
-            console.log(fields);
-            dataStorage.changeCat(res,fields, files, catId);
-            return;
+            dataStorage.changeCat(res, fields, files, catId);
         });
 
     } else if (pathName.includes('/cats-find-new-home') && req.method === 'POST') {
         let [start, middle, catId] = pathName.split('/');
         dataStorage.deleteCat(res, catId);
-        return;
 
+    } else if (pathName === '/search' && req.method === 'POST') {
+        let form = new formidable.IncomingForm();
+        form.parse(req, (err, fields, files) => {
+            let searchName = fields.search;
+            let searchedCat = cats.filter(c => c.name === searchName);
+            if (searchedCat.length < 1) {
+                fs.readFile('./views/404.html','utf8',(err,data)=>{
+                    if(err){
+                        console.log(err);
+                        return;
+                    }
+                    res.writeHead(404, {
+                        'Content-Type': 'text/html'
+                    });
+                    res.write(data);
+                    res.end();
+                })
+                return;
+            }
+            let modifiedHomePage = searchedCat.map(cat => `<li>
+            <img src="${path.join('./content/images' + `/${cat.image}`)}" alt="${cat.name}">
+            <h3>${cat.name}</h3>
+            <p><span>Breed: </span>${cat.breed}</p>
+            <p><span>Description: </span>${cat.description}</p>
+            <ul class="buttons">
+            <li class="btn edit"><a href="/cats-edit/${cat.id}">Change Info</a></li>
+            <li class="btn delete"><a href="/cats-find-new-home/${cat.id}">New Home</a></li>
+            </ul>
+            </li>`);
+            fs.readFile('./views/home/index.html', 'utf8', (err, data) => {
+                if (err) {
+                    console.log(err);
+                    return;
+                }
+
+                data = data.toString().replace('{{cats}}', modifiedHomePage)
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.write(data);
+                res.end();
+            });
+        });
     } else {
         return true;
     }
