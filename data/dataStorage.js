@@ -3,9 +3,26 @@ const catsDB = require('./cats.json');
 const fs = require('fs');
 const id = require('uniqid');
 
+const deleteCat = (res, catId) => {
+    fs.readFile('./data/cats.json', 'utf8', (err, data) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        data = JSON.parse(data);
+        let newDB = catsDB.filter(x => x.id !== catId);
+        let result = JSON.stringify(newDB, '', 2);
+        fs.writeFile('./data/cats.json', result, (err) => {
+            if (err) { console.log(err) }
 
-const changeCat = (cat, files, catId) => {
+            res.writeHead(302, { 'Location': '/' });
+            return res.end();
+        });
 
+    })
+}
+
+const changeCat = (res, cat, files, catId) => {
     if (cat.name !== '' && cat.description !== '' && cat.breed !== '') {
         fs.readFile('./data/cats.json', 'utf8', (err, data) => {
             if (err) {
@@ -23,18 +40,20 @@ const changeCat = (cat, files, catId) => {
 
             data = JSON.parse(data);
             let currentCatInDB = data.find(cat => cat.id === catId);
-            let index = catsDB.findIndex(x=>x.id ===catId );
+            let index = catsDB.findIndex(x => x.id === catId);
             currentCatInDB.name = cat.name;
             currentCatInDB.description = cat.description;
             currentCatInDB.breed = cat.breed;
-            if(fileName !== undefined){
+            if (fileName !== '') {
                 currentCatInDB.image = fileName;
             }
-            catsDB.splice(index,1,currentCatInDB);
+            catsDB.splice(index, 1, currentCatInDB);
             let result = JSON.stringify(catsDB, '', 2);
             fs.writeFile('./data/cats.json', result, (err) => {
                 if (err) { console.log(err) }
-            }); 
+                res.writeHead(302, { 'Location': '/' });
+                return res.end();
+            });
         })
     }
 }
@@ -49,7 +68,7 @@ const newBreeds = (breed) => {
     });
 }
 
-const newCat = (cat, files) => {
+const newCat = (res, cat, files) => {
 
     if (cat.name !== '' && cat.description !== ''
         && cat.breed !== '') {
@@ -73,8 +92,13 @@ const newCat = (cat, files) => {
 
         catsDB.push(newCat)
         let result = JSON.stringify(catsDB, '', 2);
-        fs.writeFile('./data/cats.json', result, (err) => {
+        fs.writeFile('./data/cats.json', result, (err, data) => {
             if (err) { console.log(err) }
+
+            res.writeHead(302, {
+                'Location': '/'
+            });
+            return res.end();
         });
 
     } else {
@@ -85,7 +109,8 @@ const newCat = (cat, files) => {
 const dataStorage = {
     newBreeds,
     newCat,
-    changeCat
+    changeCat,
+    deleteCat
 }
 
 module.exports = dataStorage;

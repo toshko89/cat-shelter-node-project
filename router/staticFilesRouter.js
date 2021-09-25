@@ -21,7 +21,6 @@ module.exports = (req, res) => {
                         res.end();
                         return;
                     }
-                    let a = getContentType(pathname)
                     res.writeHead(200, {
                         'Content-Type': getContentType(pathname)
                     });
@@ -40,7 +39,6 @@ module.exports = (req, res) => {
                         res.end();
                         return;
                     }
-                    let a = getContentType(pathname);
                     res.writeHead(200, {
                         'Content-Type': getContentType(pathname)
                     });

@@ -24,14 +24,14 @@
     <main>
         <form action="/cats-find-new-home/{{id}}" method="POST" class="cat-form">
             <h2>Shelter the cat</h2>
-            <img src="{{catImg}}" alt="">
+            <img src="{{image}}" alt="">
             <label for="name">Name</label>
             <input type="text" id="name" value="{{name}}" disabled>
             <label for="description">Description</label>
             <textarea id="description" disabled>{{description}}</textarea>
             <label for="group">Breed</label>
             <select id="group" disabled>
-                <option value="{{catBreeds}}">{{catBreeds}}</option>
+                <option value="breed">{{catBreeds}}</option>
             </select>
             <button>SHELTER THE CAT</button>
         </form>
