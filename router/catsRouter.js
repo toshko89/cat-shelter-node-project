@@ -5,6 +5,7 @@ const path = require('path');
 const dataStorage = require('../data/dataStorage.js');
 const breeds = require('../data/breeds.json');
 const cats = require('../data/cats.json');
+const htmlRender = require('../handlers/homeHTML.js')
 
 
 module.exports = (req, res) => {
@@ -121,16 +122,17 @@ module.exports = (req, res) => {
                 })
                 return;
             }
-            let modifiedHomePage = searchedCat.map(cat => `<li>
-            <img src="${path.join('./content/images' + `/${cat.image}`)}" alt="${cat.name}">
-            <h3>${cat.name}</h3>
-            <p><span>Breed: </span>${cat.breed}</p>
-            <p><span>Description: </span>${cat.description}</p>
-            <ul class="buttons">
-            <li class="btn edit"><a href="/cats-edit/${cat.id}">Change Info</a></li>
-            <li class="btn delete"><a href="/cats-find-new-home/${cat.id}">New Home</a></li>
-            </ul>
-            </li>`);
+            let modifiedHomePage = htmlRender(searchedCat);
+            // let modifiedHomePage = searchedCat.map(cat => `<li>
+            // <img src="${path.join('./content/images' + `/${cat.image}`)}" alt="${cat.name}">
+            // <h3>${cat.name}</h3>
+            // <p><span>Breed: </span>${cat.breed}</p>
+            // <p><span>Description: </span>${cat.description}</p>
+            // <ul class="buttons">
+            // <li class="btn edit"><a href="/cats-edit/${cat.id}">Change Info</a></li>
+            // <li class="btn delete"><a href="/cats-find-new-home/${cat.id}">New Home</a></li>
+            // </ul>
+            // </li>`);
             fs.readFile('./views/home/index.html', 'utf8', (err, data) => {
                 if (err) {
                     console.log(err);
