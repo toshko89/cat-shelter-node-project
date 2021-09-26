@@ -1,12 +1,10 @@
 const formidable = require('formidable');
 const url = require('url')
 const fs = require('fs');
-const path = require('path');
 const dataStorage = require('../data/dataStorage.js');
 const breeds = require('../data/breeds.json');
 const cats = require('../data/cats.json');
 const htmlRender = require('../handlers/homeHTML.js')
-
 
 module.exports = (req, res) => {
     const pathName = url.parse(req.url).pathname;
@@ -107,7 +105,7 @@ module.exports = (req, res) => {
         let form = new formidable.IncomingForm();
         form.parse(req, (err, fields, files) => {
             let searchName = fields.search;
-            let searchedCat = cats.filter(c => c.name === searchName);
+            let searchedCat = cats.filter(c => c.name.toLocaleLowerCase() === searchName.toLocaleLowerCase());
             if (searchedCat.length < 1) {
                 fs.readFile('./views/404.html','utf8',(err,data)=>{
                     if(err){
@@ -123,16 +121,6 @@ module.exports = (req, res) => {
                 return;
             }
             let modifiedHomePage = htmlRender(searchedCat);
-            // let modifiedHomePage = searchedCat.map(cat => `<li>
-            // <img src="${path.join('./content/images' + `/${cat.image}`)}" alt="${cat.name}">
-            // <h3>${cat.name}</h3>
-            // <p><span>Breed: </span>${cat.breed}</p>
-            // <p><span>Description: </span>${cat.description}</p>
-            // <ul class="buttons">
-            // <li class="btn edit"><a href="/cats-edit/${cat.id}">Change Info</a></li>
-            // <li class="btn delete"><a href="/cats-find-new-home/${cat.id}">New Home</a></li>
-            // </ul>
-            // </li>`);
             fs.readFile('./views/home/index.html', 'utf8', (err, data) => {
                 if (err) {
                     console.log(err);

@@ -1,4 +1,3 @@
-const cats = require('../data/cats.json');
 const path = require('path');
 
 const htmlRender = (catsArr) => catsArr.map(cat => `<li>

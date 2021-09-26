@@ -3,25 +3,6 @@ const catsDB = require('./cats.json');
 const fs = require('fs');
 const id = require('uniqid');
 
-const deleteCat = (res, catId) => {
-    fs.readFile('./data/cats.json', 'utf8', (err, data) => {
-        if (err) {
-            console.log(err);
-            return;
-        }
-        data = JSON.parse(data);
-        let newDB = catsDB.filter(x => x.id !== catId);
-        let result = JSON.stringify(newDB, '', 2);
-        fs.writeFile('./data/cats.json', result, (err) => {
-            if (err) { console.log(err) }
-
-            res.writeHead(302, { 'Location': '/' });
-            return res.end();
-        });
-
-    })
-}
-
 const changeCat = (res, cat, files, catId) => {
     if (cat.name !== '' && cat.description !== '' && cat.breed !== '') {
         fs.readFile('./data/cats.json', 'utf8', (err, data) => {
@@ -104,6 +85,26 @@ const newCat = (res, cat, files) => {
     } else {
         return;
     }
+}
+
+const deleteCat = (res, catId) => {
+    fs.readFile('./data/cats.json', 'utf8', (err, data) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+        data = JSON.parse(data);
+        let newDB = data.filter(x => x.id !== catId);
+        let result = JSON.stringify(newDB, '', 2);
+        fs.writeFile('./data/cats.json', result, (err) => {
+            if (err) {
+                console.log(err);
+                return;
+            }
+            res.writeHead(302, { 'Location': '/' });
+            return res.end();
+        });
+    })
 }
 
 const dataStorage = {
